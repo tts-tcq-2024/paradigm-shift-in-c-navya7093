@@ -24,22 +24,18 @@ void printMessage(const char *message) {
     printf("%s", message);
 }
  
-#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
- 
-int batteryIsOk(float temperature, float soc, float chargeRate) {
-    Check checks[] = {
-        {isTemperatureInRange, temperature, "Temperature out of range!\n"},
-        {isSocInRange, soc, "SoC out of range!\n"},
-        {isChargeRateInRange, chargeRate, "Charge Rate out of range!\n"}
-    };
- 
-    for (int i = 0; i < ARRAY_SIZE(checks); ++i) {
-        if (!checks[i].check(checks[i].value)) {
-            printMessage(checks[i].message);
-            return 0;
-        }
+int checkAndPrint(CheckFunc check, float value, const char *message) {
+    if (!check(value)) {
+        printMessage(message);
+        return 0;
     }
     return 1;
+}
+ 
+int batteryIsOk(float temperature, float soc, float chargeRate) {
+    return checkAndPrint(isTemperatureInRange, temperature, "Temperature out of range!\n") &&
+           checkAndPrint(isSocInRange, soc, "SoC out of range!\n") &&
+           checkAndPrint(isChargeRateInRange, chargeRate, "Charge Rate out of range!\n");
 }
  
 int main() {
