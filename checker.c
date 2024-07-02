@@ -24,26 +24,32 @@ void printMessage(const char *message) {
     printf("%s", message);
 }
  
-int performCheck(Check check) {
-    if (!check.check(check.value)) {
-        printMessage(check.message);
+int checkTemperature(float temperature) {
+    if (!isTemperatureInRange(temperature)) {
+        printMessage("Temperature out of range!\n");
+        return 0;
+    }
+    return 1;
+}
+ 
+int checkSoc(float soc) {
+    if (!isSocInRange(soc)) {
+        printMessage("SoC out of range!\n");
+        return 0;
+    }
+    return 1;
+}
+ 
+int checkChargeRate(float chargeRate) {
+    if (!isChargeRateInRange(chargeRate)) {
+        printMessage("Charge Rate out of range!\n");
         return 0;
     }
     return 1;
 }
  
 int batteryIsOk(float temperature, float soc, float chargeRate) {
-    Check checks[] = {
-        {isTemperatureInRange, temperature, "Temperature out of range!\n"},
-        {isSocInRange, soc, "SoC out of range!\n"},
-        {isChargeRateInRange, chargeRate, "Charge Rate out of range!\n"}
-    };
-    for (int i = 0; i < sizeof(checks) / sizeof(checks[0]); ++i) {
-        if (!performCheck(checks[i])) {
-            return 0;
-        }
-    }
-    return 1;
+    return checkTemperature(temperature) && checkSoc(soc) && checkChargeRate(chargeRate);
 }
  
 int main() {
