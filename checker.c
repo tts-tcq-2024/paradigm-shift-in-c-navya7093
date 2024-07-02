@@ -8,10 +8,6 @@ typedef struct {
     const char *message;
 } Check;
  
-void printMessage(const char *message) {
-    printf("%s", message);
-}
- 
 int isTemperatureInRange(float temperature) {
     return (temperature >= 0 && temperature <= 45);
 }
@@ -24,10 +20,14 @@ int isChargeRateInRange(float chargeRate) {
     return (chargeRate <= 0.8);
 }
  
+void printMessage(const char *message) {
+    printf("%s", message);
+}
+ 
 int batteryIsOk(float temperature, float soc, float chargeRate) {
     Check checks[] = {
         {isTemperatureInRange, temperature, "Temperature out of range!\n"},
-        {isSocInRange, soc, "State of Charge out of range!\n"},
+        {isSocInRange, soc, "SoC out of range!\n"},
         {isChargeRateInRange, chargeRate, "Charge Rate out of range!\n"}
     };
  
@@ -43,9 +43,9 @@ int batteryIsOk(float temperature, float soc, float chargeRate) {
  
 int main() {
     assert(batteryIsOk(25, 70, 0.7));
-    assert(!batteryIsOk(50, 85, 0));
-    assert(!batteryIsOk(30, 85, 0));
-    assert(!batteryIsOk(25, 70, 0.9));
+     assert(!batteryIsOk(25, 70, 0.8));
+    assert(!batteryIsOk(50, 70, 0));
+    assert(!batteryIsOk(30, 90, 0.1));
     printf("All tests passed!\n");
     return 0;
 }
