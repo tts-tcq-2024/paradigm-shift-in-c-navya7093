@@ -1,5 +1,12 @@
 #include <stdio.h>
 #include <assert.h>
+typedef int (*CheckFunc)(float);
+ 
+typedef struct {
+    CheckFunc check;
+    float value;
+    const char *message;
+} Check;
  
 int isTemperatureInRange(float temperature) {
     return (temperature >= 0 && temperature <= 45);
@@ -18,24 +25,25 @@ void printMessage(const char *message) {
 }
  
 int batteryIsOk(float temperature, float soc, float chargeRate) {
-    if (!isTemperatureInRange(temperature)) {
-        printMessage("Temperature out of range!\n");
-        return 0;
+    Check checks[] = {
+        {isTemperatureInRange, temperature, "Temperature out of range!\n"},
+        {isSocInRange, soc, "SoC out of range!\n"},
+        {isChargeRateInRange, chargeRate, "Charge Rate out of range!\n"}
+    };
+ 
+    for (int i = 0; i < sizeof(checks) / sizeof(checks[0]); ++i) {
+        if (!checks[i].check(checks[i].value)) {
+            printMessage(checks[i].message);
+            return 0;
+        }
     }
-    if (!isSocInRange(soc)) {
-        printMessage("SoC out of range!\n");
-        return 0;
-    }
-    if (!isChargeRateInRange(chargeRate)) {
-        printMessage("Charge Rate out of range!\n");
-        return 0;
-    }
+ 
     return 1;
 }
  
 int main() {
     assert(batteryIsOk(25, 70, 0.7));
-    assert(!batteryIsOk(25, 70, 0.9));
+     assert(!batteryIsOk(25, 70, 0.8));
     assert(!batteryIsOk(50, 70, 0));
     assert(!batteryIsOk(30, 90, 0.1));
     printf("All tests passed!\n");
