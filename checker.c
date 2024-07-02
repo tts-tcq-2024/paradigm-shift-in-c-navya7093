@@ -25,14 +25,21 @@ int isChargeRateInRange(float chargeRate) {
     return (chargeRate <= 0.8);
 }
  
-int performChecks(Check *checks, int numChecks) {
-    for (int i = 0; i < numChecks; ++i) {
-        if (!checks[i].check(checks[i].value)) {
-            printMessage(checks[i].message);
-            return 0;
-        }
+int checkNext(Check *checks, int currentIndex, int numChecks) {
+    if (currentIndex >= numChecks) {
+        return 1; // All checks passed
     }
-    return 1;
+ 
+    if (!checks[currentIndex].check(checks[currentIndex].value)) {
+        printMessage(checks[currentIndex].message);
+        return 0; // Check failed
+    }
+ 
+    return checkNext(checks, currentIndex + 1, numChecks); // Recurse to next check
+}
+ 
+int performChecks(Check *checks, int numChecks) {
+    return checkNext(checks, 0, numChecks); // Start with the first check
 }
  
 int batteryIsOk(float temperature, float soc, float chargeRate) {
