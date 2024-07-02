@@ -1,13 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
  
-typedef int (*CheckFunc)(float);
-typedef struct {
-    CheckFunc check;
-    float value;
-    const char *message;
-} Check;
- 
 int isTemperatureInRange(float temperature) {
     return (temperature >= 0 && temperature <= 45);
 }
@@ -24,32 +17,20 @@ void printMessage(const char *message) {
     printf("%s", message);
 }
  
-int checkTemperature(float temperature) {
+int batteryIsOk(float temperature, float soc, float chargeRate) {
     if (!isTemperatureInRange(temperature)) {
         printMessage("Temperature out of range!\n");
         return 0;
     }
-    return 1;
-}
- 
-int checkSoc(float soc) {
     if (!isSocInRange(soc)) {
         printMessage("SoC out of range!\n");
         return 0;
     }
-    return 1;
-}
- 
-int checkChargeRate(float chargeRate) {
     if (!isChargeRateInRange(chargeRate)) {
         printMessage("Charge Rate out of range!\n");
         return 0;
     }
     return 1;
-}
- 
-int batteryIsOk(float temperature, float soc, float chargeRate) {
-    return checkTemperature(temperature) && checkSoc(soc) && checkChargeRate(chargeRate);
 }
  
 int main() {
