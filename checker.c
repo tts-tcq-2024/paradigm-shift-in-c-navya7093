@@ -1,4 +1,3 @@
-[8:29 AM] Durga Praneetha Appana (MS/EVC-CE1-XC)
 #include <stdio.h>
 
 #include <assert.h>
