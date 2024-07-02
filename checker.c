@@ -49,21 +49,38 @@ int checkChargeRate(float chargeRate) {
     return 1;
 }
  
+int performTemperatureCheck(float temperature) {
+    return checkTemperature(temperature);
+}
+ 
+int performSocCheck(float soc) {
+    return checkSoc(soc);
+}
+ 
+int performChargeRateCheck(float chargeRate) {
+    return checkChargeRate(chargeRate);
+}
+ 
 int performChecks(Check *checks, int numChecks) {
     int allPassed = 1; // Assume all checks pass initially
-    for (int i = 0; i < numChecks; ++i) {
-        if (!checks[i].check(checks[i].value)) {
-            allPassed = 0; // Set to 0 if any check fails
-        }
+    // Call each check function directly
+    if (numChecks > 0 && !checks[0].check(checks[0].value)) {
+        allPassed = 0;
+    }
+    if (numChecks > 1 && !checks[1].check(checks[1].value)) {
+        allPassed = 0;
+    }
+    if (numChecks > 2 && !checks[2].check(checks[2].value)) {
+        allPassed = 0;
     }
     return allPassed;
 }
  
 int batteryIsOk(float temperature, float soc, float chargeRate) {
     Check checks[] = {
-        {checkTemperature, temperature, NULL},
-        {checkSoc, soc, NULL},
-        {checkChargeRate, chargeRate, NULL}
+        {performTemperatureCheck, temperature, NULL},
+        {performSocCheck, soc, NULL},
+        {performChargeRateCheck, chargeRate, NULL}
     };
     return performChecks(checks, sizeof(checks) / sizeof(checks[0]));
 }
