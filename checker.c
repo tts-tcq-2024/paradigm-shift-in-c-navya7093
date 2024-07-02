@@ -25,28 +25,45 @@ int isChargeRateInRange(float chargeRate) {
     return (chargeRate <= 0.8);
 }
  
-int checkNext(Check *checks, int currentIndex, int numChecks) {
-    if (currentIndex >= numChecks) {
-        return 1; // All checks passed
+int checkTemperature(float temperature) {
+    if (!isTemperatureInRange(temperature)) {
+        printMessage("Temperature out of range!\n");
+        return 0;
     }
+    return 1;
+}
  
-    if (!checks[currentIndex].check(checks[currentIndex].value)) {
-        printMessage(checks[currentIndex].message);
-        return 0; // Check failed
+int checkSoc(float soc) {
+    if (!isSocInRange(soc)) {
+        printMessage("State of Charge out of range!\n");
+        return 0;
     }
+    return 1;
+}
  
-    return checkNext(checks, currentIndex + 1, numChecks); // Recurse to next check
+int checkChargeRate(float chargeRate) {
+    if (!isChargeRateInRange(chargeRate)) {
+        printMessage("Charge Rate out of range!\n");
+        return 0;
+    }
+    return 1;
 }
  
 int performChecks(Check *checks, int numChecks) {
-    return checkNext(checks, 0, numChecks); // Start with the first check
+    int allPassed = 1; // Assume all checks pass initially
+    for (int i = 0; i < numChecks; ++i) {
+        if (!checks[i].check(checks[i].value)) {
+            allPassed = 0; // Set to 0 if any check fails
+        }
+    }
+    return allPassed;
 }
  
 int batteryIsOk(float temperature, float soc, float chargeRate) {
     Check checks[] = {
-        {isTemperatureInRange, temperature, "Temperature out of range!\n"},
-        {isSocInRange, soc, "State of Charge out of range!\n"},
-        {isChargeRateInRange, chargeRate, "Charge Rate out of range!\n"}
+        {checkTemperature, temperature, NULL},
+        {checkSoc, soc, NULL},
+        {checkChargeRate, chargeRate, NULL}
     };
     return performChecks(checks, sizeof(checks) / sizeof(checks[0]));
 }
