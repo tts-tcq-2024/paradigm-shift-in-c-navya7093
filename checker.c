@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+
 typedef int (*CheckFunc)(float);
  
 typedef struct {
