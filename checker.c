@@ -17,20 +17,34 @@ void printErrorMessage(const char* message) {
     printf("%s\n", message);
 }
 
-int batteryIsOk(float temperature, float soc, float chargeRate) {
+int checkTemperature(float temperature) {
     if (!isTemperatureOk(temperature)) {
         printErrorMessage("Temperature out of range!");
         return 0;
     }
+    return 1;
+}
+
+int checkSoc(float soc) {
     if (!isSocOk(soc)) {
         printErrorMessage("State of Charge out of range!");
         return 0;
     }
+    return 1;
+}
+
+int checkChargeRate(float chargeRate) {
     if (!isChargeRateOk(chargeRate)) {
         printErrorMessage("Charge Rate out of range!");
         return 0;
     }
     return 1;
+}
+
+int batteryIsOk(float temperature, float soc, float chargeRate) {
+    return checkTemperature(temperature) &&
+           checkSoc(soc) &&
+           checkChargeRate(chargeRate);
 }
 
 int main() {
