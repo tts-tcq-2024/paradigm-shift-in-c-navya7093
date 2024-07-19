@@ -17,36 +17,36 @@ void printErrorMessage(const char* message) {
     printf("%s\n", message);
 }
 
-typedef int (*checkFunction)(float);
-typedef struct {
-    checkFunction function;
-    const char* errorMessage;
-} ParameterCheck;
+int checkTemperature(float temperature) {
+    if (!isTemperatureOk(temperature)) {
+        printErrorMessage("Temperature out of range!");
+        return 0;
+    }
+    return 1;
+}
 
-int checkParameter(float parameter, checkFunction function, const char* errorMessage) {
-    if (!function(parameter)) {
-        printErrorMessage(errorMessage);
+int checkSoc(float soc) {
+    if (!isSocOk(soc)) {
+        printErrorMessage("State of Charge out of range!");
+        return 0;
+    }
+    return 1;
+}
+
+int checkChargeRate(float chargeRate) {
+    if (!isChargeRateOk(chargeRate)) {
+        printErrorMessage("Charge Rate out of range!");
         return 0;
     }
     return 1;
 }
 
 int batteryIsOk(float temperature, float soc, float chargeRate) {
-    ParameterCheck checks[] = {
-        { isTemperatureOk, "Temperature out of range!" },
-        { isSocOk, "State of Charge out of range!" },
-        { isChargeRateOk, "Charge Rate out of range!" }
-    };
-    
-    float parameters[] = { temperature, soc, chargeRate };
-    
-    for (int i = 0; i < 3; ++i) {
-        if (!checkParameter(parameters[i], checks[i].function, checks[i].errorMessage)) {
-            return 0;
-        }
-    }
-    
-    return 1;
+    int temperatureOk = checkTemperature(temperature);
+    int socOk = checkSoc(soc);
+    int chargeRateOk = checkChargeRate(chargeRate);
+
+    return temperatureOk && socOk && chargeRateOk;
 }
 
 int main() {
