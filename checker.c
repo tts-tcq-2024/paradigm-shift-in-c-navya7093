@@ -1,51 +1,63 @@
 #include <stdio.h>
 #include <assert.h>
-
-int isTemperatureOk(float temperature) {
-    return (temperature >= 0 && temperature <= 45);
-}
-
-int isSocOk(float soc) {
-    return (soc >= 20 && soc <= 80);
-}
-
-int isChargeRateOk(float chargeRate) {
-    return (chargeRate <= 0.8);
-}
-
+ 
+#define TEMPERATURE_MIN 0
+#define TEMPERATURE_MAX 45
+#define SOC_MIN 20
+#define SOC_MAX 80
+#define CHARGE_RATE_MAX 0.8
+ 
+typedef enum {
+    BATTERY_OK,
+    TEMPERATURE_ERROR,
+    SOC_ERROR,
+    CHARGE_RATE_ERROR
+} BatteryStatus;
+ 
 void printErrorMessage(const char* message) {
     printf("%s\n", message);
 }
-
-int checkParameter(int (*parameterOkFunction)(float), float parameterValue, const char* errorMessage) {
-    if (!parameterOkFunction(parameterValue)) {
-        printErrorMessage(errorMessage);
-        return 0;
+ 
+BatteryStatus checkTemperature(float temperature) {
+    if (temperature < TEMPERATURE_MIN || temperature > TEMPERATURE_MAX) {
+        printErrorMessage("Temperature out of range!");
+        return TEMPERATURE_ERROR;
     }
-    return 1;
+    return BATTERY_OK;
 }
-
-int checkTemperature(float temperature) {
-    return checkParameter(isTemperatureOk, temperature, "Temperature out of range!");
+ 
+BatteryStatus checkSoc(float soc) {
+    if (soc < SOC_MIN || soc > SOC_MAX) {
+        printErrorMessage("State of Charge out of range!");
+        return SOC_ERROR;
+    }
+    return BATTERY_OK;
 }
-
-int checkSoc(float soc) {
-    return checkParameter(isSocOk, soc, "State of Charge out of range!");
+ 
+BatteryStatus checkChargeRate(float chargeRate) {
+    if (chargeRate > CHARGE_RATE_MAX) {
+        printErrorMessage("Charge Rate out of range!");
+        return CHARGE_RATE_ERROR;
+    }
+    return BATTERY_OK;
 }
-
-int checkChargeRate(float chargeRate) {
-    return checkParameter(isChargeRateOk, chargeRate, "Charge Rate out of range!");
+ 
+BatteryStatus batteryIsOk(float temperature, float soc, float chargeRate) {
+    if (checkTemperature(temperature) != BATTERY_OK) {
+        return TEMPERATURE_ERROR;
+    }
+    if (checkSoc(soc) != BATTERY_OK) {
+        return SOC_ERROR;
+    }
+    if (checkChargeRate(chargeRate) != BATTERY_OK) {
+        return CHARGE_RATE_ERROR;
+    }
+    return BATTERY_OK;
 }
-
-int batteryIsOk(float temperature, float soc, float chargeRate) {
-    return checkTemperature(temperature) &&
-           checkSoc(soc) &&
-           checkChargeRate(chargeRate);
-}
-
+ 
 int main() {
-    assert(batteryIsOk(25, 70, 0.7));
-    assert(!batteryIsOk(50, 85, 0));
+    assert(batteryIsOk(25, 70, 0.7) == BATTERY_OK);
+    assert(batteryIsOk(50, 85, 0) != BATTERY_OK);
     printf("All tests passed.\n");
     return 0;
 }
