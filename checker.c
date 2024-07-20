@@ -18,46 +18,35 @@ void printErrorMessage(const char* message) {
     printf("%s\n", message);
 }
  
+int isTemperatureOk(float temperature) {
+    return (temperature >= TEMPERATURE_MIN && temperature <= TEMPERATURE_MAX);
+}
+ 
+int isSocOk(float soc) {
+    return (soc >= SOC_MIN && soc <= SOC_MAX);
+}
+ 
+int isChargeRateOk(float chargeRate) {
+    return (chargeRate <= CHARGE_RATE_MAX);
+}
+ 
 int isError(BatteryStatus status) {
     return status != BATTERY_OK;
 }
  
-BatteryStatus checkTemperature(float temperature) {
-    if (temperature < TEMPERATURE_MIN || temperature > TEMPERATURE_MAX) {
-        printErrorMessage("Temperature out of range!");
-        return TEMPERATURE_ERROR;
-    }
-    return BATTERY_OK;
+BatteryStatus checkBattery(float temperature, float soc, float chargeRate) {
+    return isTemperatureOk(temperature) && isSocOk(soc) && isChargeRateOk(chargeRate) ? BATTERY_OK :
+           !isTemperatureOk(temperature) ? TEMPERATURE_ERROR :
+           !isSocOk(soc) ? SOC_ERROR :
+           CHARGE_RATE_ERROR;
 }
  
-BatteryStatus checkSoc(float soc) {
-    if (soc < SOC_MIN || soc > SOC_MAX) {
-        printErrorMessage("State of Charge out of range!");
-        return SOC_ERROR;
-    }
-    return BATTERY_OK;
-}
- 
-BatteryStatus checkChargeRate(float chargeRate) {
-    if (chargeRate > CHARGE_RATE_MAX) {
-        printErrorMessage("Charge Rate out of range!");
-        return CHARGE_RATE_ERROR;
-    }
-    return BATTERY_OK;
-}
- 
-BatteryStatus determineBatteryStatus(BatteryStatus status, BatteryStatus newStatus) {
-    return isError(newStatus) ? newStatus : status;
+BatteryStatus updateBatteryStatus(BatteryStatus currentStatus, BatteryStatus newStatus) {
+    return isError(newStatus) ? newStatus : currentStatus;
 }
  
 BatteryStatus batteryIsOk(float temperature, float soc, float chargeRate) {
-    BatteryStatus status = BATTERY_OK;
- 
-    status = determineBatteryStatus(status, checkTemperature(temperature));
-    status = determineBatteryStatus(status, checkSoc(soc));
-    status = determineBatteryStatus(status, checkChargeRate(chargeRate));
- 
-    return status;
+    return updateBatteryStatus(BATTERY_OK, checkBattery(temperature, soc, chargeRate));
 }
  
 int main() {
