@@ -18,6 +18,10 @@ void printErrorMessage(const char* message) {
     printf("%s\n", message);
 }
  
+int isError(BatteryStatus status) {
+    return status != BATTERY_OK;
+}
+ 
 BatteryStatus checkTemperature(float temperature) {
     if (temperature < TEMPERATURE_MIN || temperature > TEMPERATURE_MAX) {
         printErrorMessage("Temperature out of range!");
@@ -43,16 +47,17 @@ BatteryStatus checkChargeRate(float chargeRate) {
 }
  
 BatteryStatus batteryIsOk(float temperature, float soc, float chargeRate) {
-    if (checkTemperature(temperature) != BATTERY_OK) {
-        return TEMPERATURE_ERROR;
+    BatteryStatus status = BATTERY_OK;
+ 
+    if (isError(checkTemperature(temperature))) {
+        status = TEMPERATURE_ERROR;
+    } else if (isError(checkSoc(soc))) {
+        status = SOC_ERROR;
+    } else if (isError(checkChargeRate(chargeRate))) {
+        status = CHARGE_RATE_ERROR;
     }
-    if (checkSoc(soc) != BATTERY_OK) {
-        return SOC_ERROR;
-    }
-    if (checkChargeRate(chargeRate) != BATTERY_OK) {
-        return CHARGE_RATE_ERROR;
-    }
-    return BATTERY_OK;
+ 
+    return status;
 }
  
 int main() {
