@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "warnings.h"
+#include "battery_monitor.h"
 
 static int warningsEnabled = 0;
 
