@@ -59,3 +59,16 @@ Shorten the Semantic distance
 - Functional to express relation between input and output
 - Object oriented to encapsulate state with actions
 - Apect oriented to capture repeating aspects
+
+## Extensions Implemented
+
+### Extension 1: Early Warning
+Added early warning messages for temperature, SoC, and charge rate within 5% of their upper and lower limits.
+
+## File Structure
+
+- `main.c`: Contains the `main` function and test cases.
+- `battery_monitor.c`: Contains the core functionality for monitoring battery parameters.
+- `battery_monitor.h`: Declares the functions and constants used in `battery_monitor.c`.
+- `warnings.c`: Handles the warning logic.
+- `warnings.h`: Declares the functions and constants used in `warnings.c`.
