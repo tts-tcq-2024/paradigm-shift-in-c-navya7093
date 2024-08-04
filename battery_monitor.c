@@ -1,36 +1,52 @@
 #include <stdio.h>
 #include "battery_monitor.h"
-#include "warnings.h"
+
+int batteryIsOk(float temperature, float soc, float chargeRate) {
+    return isTemperatureOk(temperature) && isSocOk(soc) && isChargeRateOk(chargeRate);
+}
 
 int isTemperatureOk(float temperature) {
-    if (temperature < TEMP_MIN || temperature > TEMP_MAX) {
-        printf("Temperature out of range!\n");
-        return 0;
-    }
-    checkTemperatureWarning(temperature);
-    return 1;
+    checkEarlyWarning(temperature, 0, 45, 2.25, "Warning: Approaching lower temperature limit", "Warning: Approaching upper temperature limit");
+    return isValueInRange(temperature, 0, 45, "Temperature out of range!");
 }
 
 int isSocOk(float soc) {
-    if (soc < SOC_MIN || soc > SOC_MAX) {
-        printf("State of Charge out of range!\n");
-        return 0;
-    }
-    checkSocWarning(soc);
-    return 1;
+    checkEarlyWarning(soc, 20, 80, 4, "Warning: Approaching discharge", "Warning: Approaching charge-peak");
+    return isValueInRange(soc, 20, 80, "State of Charge out of range!");
 }
 
 int isChargeRateOk(float chargeRate) {
-    if (chargeRate > CHARGE_RATE_MAX) {
-        printf("Charge Rate out of range!\n");
+    checkEarlyWarningForChargeRate(chargeRate, 0.8, 0.04, "Warning: Approaching maximum charge rate");
+    return isChargeRateInRange(chargeRate, 0.8, "Charge Rate out of range!");
+}
+
+void checkEarlyWarning(float value, float min, float max, float tolerance, const char* lowWarning, const char* highWarning) {
+    if (value >= min && value <= min + tolerance) {
+        printf("%s\n", lowWarning);
+    }
+    if (value >= max - tolerance && value <= max) {
+        printf("%s\n", highWarning);
+    }
+}
+
+void checkEarlyWarningForChargeRate(float value, float max, float tolerance, const char* highWarning) {
+    if (value >= max - tolerance && value <= max) {
+        printf("%s\n", highWarning);
+    }
+}
+
+int isValueInRange(float value, float min, float max, const char* warningMessage) {
+    if (value < min || value > max) {
+        printf("%s\n", warningMessage);
         return 0;
     }
-    checkChargeRateWarning(chargeRate);
     return 1;
 }
 
-int batteryIsOk(float temperature, float soc, float chargeRate) {
-    return isTemperatureOk(temperature) &&
-           isSocOk(soc) &&
-           isChargeRateOk(chargeRate);
+int isChargeRateInRange(float value, float max, const char* warningMessage) {
+    if (value > max) {
+        printf("%s\n", warningMessage);
+        return 0;
+    }
+    return 1;
 }
