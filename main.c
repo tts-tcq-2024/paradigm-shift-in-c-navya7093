@@ -1,15 +1,16 @@
 #include <stdio.h>
-#include <assert.h>
-#include "battery_monitor.h"
-#include "warnings.h"
+#include "Testcases.h"
 
 int main() {
-    // Run tests with warnings enabled
-    enableWarnings(1);
-
-    assert(batteryIsOk(25, 70, 0.7));
-    assert(!batteryIsOk(50, 85, 0));
-
-    printf("All tests passed.\n");
+    testTemperatureBelowLowerLimit();
+    testTemperatureAboveUpperLimit();
+    testSocBelowLowerLimit();
+    testSocAboveUpperLimit();
+    testChargeRateAboveUpperLimit();
+    testApproachingLowerTemperatureLimit();
+    testApproachingHigherTemperatureLimit();
+    testApproachingDischarge();
+    testApproachingChargePeak();
+    testApproachingMaxChargeRate();
     return 0;
 }
