@@ -1,5 +1,5 @@
-#ifndef TEST_CASES_H
-#define TEST_CASES_H
+#ifndef TESTCASES_H
+#define TESTCASES_H
 
 void testTemperatureBelowLowerLimit();
 void testTemperatureAboveUpperLimit();
