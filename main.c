@@ -2,16 +2,16 @@
 #include "Test_cases.h"
 
 int main() {
-    testTemperatureBelowLowerLimit();
-    testTemperatureAboveUpperLimit();
-    testSocBelowLowerLimit();
-    testSocAboveUpperLimit();
-    testChargeRateAboveUpperLimit();
-    testApproachingLowerTemperatureLimit();
-    testApproachingHigherTemperatureLimit();
-    testApproachingDischarge();
-    testApproachingChargePeak();
-    testApproachingMaxChargeRate();
+    TemperaturecheckBelowLowerLimit();
+    TemperaturecheckAboveUpperLimit();
+    SoccheckBelowLowerLimit();
+    SoccheckAboveUpperLimit();
+    ChargeRatecheckAboveUpperLimit();
+    ApproachingcheckLowerTemperatureLimit();
+    ApproachingcheckHigherTemperatureLimit();
+    ApproachingDischargecheck();
+    ApproachingChargePeakcheck();
+    ApproachingMaxChargeRatecheck();
 return 0;
 }
 
