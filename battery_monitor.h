@@ -1,15 +1,17 @@
-#ifndef TESTCASES_H
-#define TESTCASES_H
+#ifndef BATTERY_MONITOR_H
+#define BATTERY_MONITOR_H
 
-void testTemperatureBelowLowerLimit();
-void testTemperatureAboveUpperLimit();
-void testSocBelowLowerLimit();
-void testSocAboveUpperLimit();
-void testChargeRateAboveUpperLimit();
-void testApproachingLowerTemperatureLimit();
-void testApproachingHigherTemperatureLimit();
-void testApproachingDischarge();
-void testApproachingChargePeak();
-void testApproachingMaxChargeRate();
+int batteryIsOk(float temperature, float soc, float chargeRate);
+int isTemperatureOk(float temperature);
+int isChargeRateOk(float chargeRate);
+void checkEarlyWarning(float value, float min, float max, float tolerance, const char* lowWarning, const char* highWarning);
+void checkEarlyWarningForChargeRate(float value, float max, float tolerance, const char* highWarning);
+int isSocOk(float soc);
+int isTemperatureOk(float temperature);
+int isValueInRange(float value, float min, float max, const char* WarningMessage);
+int isChargeRateInRange(float value, float max, const char* WarningMessage);
+void printWarningMessage(const char* WarningMessage);
+void printLowWarning(float value, float min, float tolerance, const char* lowWarning);
+void printHighWarning(float value, float max, float tolerance, const char* highWarning);
 
 #endif 
