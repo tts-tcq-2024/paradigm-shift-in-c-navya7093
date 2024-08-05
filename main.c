@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include "Test_cases.h"
+#include<stdio.h>
+#include "Testcases.h"
 
 int main() {
     testTemperatureBelowLowerLimit();
@@ -12,5 +12,6 @@ int main() {
     testApproachingDischarge();
     testApproachingChargePeak();
     testApproachingMaxChargeRate();
-    return 0;
+return 0;
 }
+
