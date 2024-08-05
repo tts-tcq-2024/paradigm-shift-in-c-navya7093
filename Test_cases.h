@@ -1,15 +1,15 @@
 #ifndef TESTCASES_H
 #define TESTCASES_H
 
-void testTemperatureBelowLowerLimit();
-void testTemperatureAboveUpperLimit();
-void testSocBelowLowerLimit();
-void testSocAboveUpperLimit();
-void testChargeRateAboveUpperLimit();
-void testApproachingLowerTemperatureLimit();
-void testApproachingHigherTemperatureLimit();
-void testApproachingDischarge();
-void testApproachingChargePeak();
-void testApproachingMaxChargeRate();
+void TemperaturecheckBelowLowerLimit();
+void TemperaturecheckAboveUpperLimit();
+void SoccheckBelowLowerLimit();
+void SoccheckAboveUpperLimit();
+void ChargeRatecheckAboveUpperLimit();
+void ApproachingcheckLowerTemperatureLimit();
+void ApproachingcheckHigherTemperatureLimit();
+void ApproachingDischargecheck();
+void ApproachingChargePeakcheck();
+void ApproachingMaxChargeRatecheck();
 
 #endif 
